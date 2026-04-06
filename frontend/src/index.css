@@ -5,17 +5,17 @@
    Design tokens
 ═══════════════════════════════════════════════ */
 :root {
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-glow: rgba(99, 102, 241, 0.35);
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-glow: rgba(99, 102, 241, 0.2);
   --accent: #f59e0b;
   --success: #10b981;
   --danger: #ef4444;
-  --bg: #070614;
-  --card: rgba(255, 255, 255, 0.035);
-  --border: rgba(255, 255, 255, 0.07);
-  --text: #e2e8f0;
-  --muted: #64748b;
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #1f2937;
+  --muted: #6b7280;
 }
 
 /* ═══════════════════════════════════════════════
@@ -49,9 +49,9 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(99, 102, 241, 0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139, 92, 246, 0.14) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 60% 30%, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139, 92, 246, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 60% 30%, rgba(245, 158, 11, 0.03) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
 }
@@ -77,13 +77,15 @@ body::before {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 20px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
 }
 
 /* ═══════════════════════════════════════════════
@@ -129,7 +131,7 @@ body::before {
   gap: 8px;
   width: 100%;
   padding: 13px 20px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.03);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -141,7 +143,7 @@ body::before {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.11);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .btn-danger {
@@ -191,7 +193,7 @@ body::before {
 ═══════════════════════════════════════════════ */
 .input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 13px 16px;
@@ -204,6 +206,7 @@ body::before {
 
 .input:focus {
   border-color: var(--primary);
+  background: #ffffff;
 }
 
 label {
@@ -246,7 +249,7 @@ label {
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.035);
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: 12px;
   margin-bottom: 8px;
@@ -296,7 +299,7 @@ label {
 .page-title {
   font-size: 23px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
 }
 
 .page-sub {
@@ -352,7 +355,7 @@ label {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border);
   color: var(--text);
   cursor: pointer;
@@ -361,7 +364,7 @@ label {
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 /* ═══════════════════════════════════════════════
@@ -439,7 +442,7 @@ label {
 ═══════════════════════════════════════════════ */
 .tab-row {
   display: flex;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.04);
   border-radius: 14px;
   padding: 4px;
   gap: 4px;

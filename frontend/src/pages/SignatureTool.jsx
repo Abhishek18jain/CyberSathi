@@ -162,7 +162,7 @@ export default function SignatureTool() {
             {/* Draw mode */}
             {tab === 'draw' && (
                 <div style={{ marginBottom: 16 }}>
-                    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid var(--border)' }}>
                         <canvas
                             ref={canvasRef}
                             width={480}
@@ -219,8 +219,8 @@ export default function SignatureTool() {
                     <div style={{ fontSize: 13, color: '#34d399', fontWeight: 600, marginBottom: 10 }}>✅ Background removed</div>
                     {/* Checkerboard to show transparency */}
                     <div style={{
-                        background: 'repeating-conic-gradient(#2a2040 0% 25%, #1a1030 0% 50%) 0 0 / 24px 24px',
-                        borderRadius: 14, padding: 16, marginBottom: 14, border: '1px solid rgba(255,255,255,0.06)',
+                        background: 'repeating-conic-gradient(#f3f4f6 0% 25%, #e5e7eb 0% 50%) 0 0 / 24px 24px',
+                        borderRadius: 14, padding: 16, marginBottom: 14, border: '1px solid var(--border)',
                     }}>
                         <img src={resultUrl} alt="transparent PNG"
                             style={{ maxWidth: '100%', display: 'block', margin: '0 auto', maxHeight: 160 }} />

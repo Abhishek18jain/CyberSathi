@@ -119,16 +119,16 @@ export default function PassportTool() {
                             width: 72,
                             padding: '8px 10px',
                             borderRadius: 10,
-                            border: '1.5px solid rgba(99,102,241,0.35)',
-                            background: 'rgba(15,23,42,0.7)',
-                            color: '#f1f5f9',
+                            border: '1.5px solid rgba(79,70,229,0.3)',
+                            background: '#ffffff',
+                            color: 'var(--text)',
                             fontSize: 15,
                             fontWeight: 700,
                             outline: 'none',
                             textAlign: 'center',
                         }}
                     />
-                    <span style={{ fontSize: 12, color: '#475569' }}>max 30 per A4</span>
+                    <span style={{ fontSize: 12, color: 'var(--muted)' }}>max 30 per A4</span>
                 </div>
             </div>
 
@@ -136,8 +136,8 @@ export default function PassportTool() {
             <div style={{
                 display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18,
                 padding: '10px 14px', borderRadius: 10,
-                background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.18)',
-                fontSize: 12, color: '#94a3b8',
+                background: 'rgba(79,70,229,0.08)', border: '1px solid rgba(79,70,229,0.18)',
+                fontSize: 12, color: 'var(--muted)',
             }}>
                 <Scissors size={14} style={{ color: '#6366f1', flexShrink: 0 }} />
                 Sheet: A4 (210×297 mm) · Photo: 35×45 mm · 300 DPI · Grey cutting guides printed on sheet
@@ -147,17 +147,17 @@ export default function PassportTool() {
             <div style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 padding: '12px 14px', borderRadius: 12, marginBottom: 16,
-                background: removeBg ? 'rgba(99,102,241,0.12)' : 'rgba(15,23,42,0.5)',
-                border: `1.5px solid ${removeBg ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                background: removeBg ? 'rgba(79,70,229,0.12)' : '#ffffff',
+                border: `1.5px solid ${removeBg ? 'rgba(79,70,229,0.4)' : 'var(--border)'}`,
                 transition: 'all 0.2s ease', cursor: 'pointer',
             }} onClick={() => setRemoveBg(v => !v)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <Eraser size={16} color={removeBg ? '#6366f1' : '#64748b'} />
+                    <Eraser size={16} color={removeBg ? '#4f46e5' : 'var(--muted)'} />
                     <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: removeBg ? '#a5b4fc' : '#94a3b8' }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: removeBg ? '#4338ca' : 'var(--text)' }}>
                             Remove Background → White
                         </div>
-                        <div style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>
+                        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
                             {removeBg ? 'Uses remove.bg API credit per generation' : 'Background kept as-is'}
                         </div>
                     </div>
@@ -165,7 +165,7 @@ export default function PassportTool() {
                 {/* Toggle pill */}
                 <div style={{
                     width: 40, height: 22, borderRadius: 11,
-                    background: removeBg ? '#6366f1' : '#334155',
+                    background: removeBg ? '#4f46e5' : '#e5e7eb',
                     position: 'relative', transition: 'background 0.2s',
                     flexShrink: 0,
                 }}>
@@ -189,7 +189,7 @@ export default function PassportTool() {
                         ✅ {count} passport photos on A4 — ready to print &amp; cut
                     </div>
                     <img src={resultUrl} alt="sheet" style={{
-                        width: '100%', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)',
+                        width: '100%', borderRadius: 12, border: '1px solid var(--border)',
                         marginBottom: 14, background: '#fff',
                     }} />
                     <div style={{ display: 'flex', gap: 10 }}>
