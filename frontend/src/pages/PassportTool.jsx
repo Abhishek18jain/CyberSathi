@@ -1,0 +1,210 @@
+import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useDropzone } from 'react-dropzone'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { ArrowLeft, Camera, Download, Image, Printer, Scissors, Eraser } from 'lucide-react'
+
+const PRESETS = [
+    { n: 6, label: '6', hint: '2×3' },
+    { n: 8, label: '8', hint: '2×4' },
+    { n: 12, label: '12', hint: '3×4' },
+    { n: 20, label: '20', hint: '4×5' },
+    { n: 30, label: '30', hint: '5×6 (max)' },
+]
+
+const MAX = 30
+
+export default function PassportTool() {
+    const nav = useNavigate()
+    const [file, setFile] = useState(null)
+    const [preview, setPreview] = useState(null)
+    const [count, setCount] = useState(8)
+    const [removeBg, setRemoveBg] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [resultUrl, setResultUrl] = useState(null)
+
+    const onDrop = useCallback((accepted) => {
+        if (!accepted[0]) return
+        setFile(accepted[0])
+        setPreview(URL.createObjectURL(accepted[0]))
+        setResultUrl(null)
+    }, [])
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop, accept: { 'image/*': [] }, maxFiles: 1,
+    })
+
+    function handleCountInput(val) {
+        const n = parseInt(val, 10)
+        if (isNaN(n)) { setCount(''); return }
+        setCount(Math.min(MAX, Math.max(1, n)))
+    }
+
+    async function handleGenerate() {
+        const n = parseInt(count, 10)
+        if (!file) return toast.error('Please upload a photo first')
+        if (!n || n < 1) return toast.error('Enter a valid photo count (1–30)')
+        setLoading(true)
+        try {
+            const fd = new FormData()
+            fd.append('image', file)
+            fd.append('count', n)
+            fd.append('removeBg', String(removeBg))
+            const res = await axios.post('/passport/generate', fd)
+            setResultUrl(res.data.url)
+            toast.success(`${n}-photo A4 sheet ready!`)
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Generation failed')
+        } finally { setLoading(false) }
+    }
+
+    return (
+        <div className="page">
+            {/* Header */}
+            <div className="back-header">
+                <button className="back-btn" onClick={() => nav('/')}><ArrowLeft size={18} /></button>
+                <div>
+                    <div className="page-title">Passport Photo</div>
+                    <div className="page-sub">Standard A4 sheet · 35×45 mm · cutting guides included</div>
+                </div>
+            </div>
+
+            {/* Dropzone */}
+            <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`} style={{ marginBottom: 16 }}>
+                <input {...getInputProps()} />
+                {preview ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                        <img src={preview} alt="preview"
+                            style={{ width: 90, height: 116, objectFit: 'cover', borderRadius: 8, border: '2px solid rgba(99,102,241,0.4)' }} />
+                        <span style={{ fontSize: 13, color: '#64748b' }}>Tap to change photo</span>
+                    </div>
+                ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                        <Image size={44} color="#6366f1" style={{ opacity: 0.8 }} />
+                        <p style={{ color: '#94a3b8', fontSize: 15 }}>
+                            {isDragActive ? 'Drop photo here' : 'Tap to upload a photo'}
+                        </p>
+                        <span style={{ fontSize: 12, color: '#334155' }}>JPG, PNG – max 10MB</span>
+                    </div>
+                )}
+            </div>
+
+            {/* Count selector */}
+            <div style={{ marginBottom: 20 }}>
+                <span className="section-label">Number of photos on sheet</span>
+
+                {/* Quick presets */}
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                    {PRESETS.map(({ n, label, hint }) => (
+                        <button key={n}
+                            className={`option-pill ${count === n ? 'selected' : ''}`}
+                            onClick={() => setCount(n)}>
+                            <div style={{ fontSize: 15, fontWeight: 800 }}>{label}</div>
+                            <div style={{ fontSize: 10, opacity: 0.6 }}>{hint}</div>
+                        </button>
+                    ))}
+                </div>
+
+                {/* Custom input */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: 13, color: '#94a3b8', whiteSpace: 'nowrap' }}>Custom count:</span>
+                    <input
+                        type="number"
+                        min={1}
+                        max={MAX}
+                        value={count}
+                        onChange={(e) => handleCountInput(e.target.value)}
+                        style={{
+                            width: 72,
+                            padding: '8px 10px',
+                            borderRadius: 10,
+                            border: '1.5px solid rgba(99,102,241,0.35)',
+                            background: 'rgba(15,23,42,0.7)',
+                            color: '#f1f5f9',
+                            fontSize: 15,
+                            fontWeight: 700,
+                            outline: 'none',
+                            textAlign: 'center',
+                        }}
+                    />
+                    <span style={{ fontSize: 12, color: '#475569' }}>max 30 per A4</span>
+                </div>
+            </div>
+
+            {/* Info badge */}
+            <div style={{
+                display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18,
+                padding: '10px 14px', borderRadius: 10,
+                background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.18)',
+                fontSize: 12, color: '#94a3b8',
+            }}>
+                <Scissors size={14} style={{ color: '#6366f1', flexShrink: 0 }} />
+                Sheet: A4 (210×297 mm) · Photo: 35×45 mm · 300 DPI · Grey cutting guides printed on sheet
+            </div>
+
+            {/* Background removal toggle */}
+            <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '12px 14px', borderRadius: 12, marginBottom: 16,
+                background: removeBg ? 'rgba(99,102,241,0.12)' : 'rgba(15,23,42,0.5)',
+                border: `1.5px solid ${removeBg ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                transition: 'all 0.2s ease', cursor: 'pointer',
+            }} onClick={() => setRemoveBg(v => !v)}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <Eraser size={16} color={removeBg ? '#6366f1' : '#64748b'} />
+                    <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: removeBg ? '#a5b4fc' : '#94a3b8' }}>
+                            Remove Background → White
+                        </div>
+                        <div style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>
+                            {removeBg ? 'Uses remove.bg API credit per generation' : 'Background kept as-is'}
+                        </div>
+                    </div>
+                </div>
+                {/* Toggle pill */}
+                <div style={{
+                    width: 40, height: 22, borderRadius: 11,
+                    background: removeBg ? '#6366f1' : '#334155',
+                    position: 'relative', transition: 'background 0.2s',
+                    flexShrink: 0,
+                }}>
+                    <div style={{
+                        position: 'absolute', top: 3,
+                        left: removeBg ? 20 : 3,
+                        width: 16, height: 16, borderRadius: '50%',
+                        background: '#fff', transition: 'left 0.2s',
+                    }} />
+                </div>
+            </div>
+
+            <button className="btn-primary" onClick={handleGenerate} disabled={loading}>
+                {loading ? <><span className="spin">◌</span> Generating…</> : <><Camera size={18} /> Generate {count || '?'} Photos on A4</>}
+            </button>
+
+            {/* Result */}
+            {resultUrl && (
+                <div className="result-success" style={{ animation: 'fadeSlide 0.4s ease both' }}>
+                    <div style={{ color: '#34d399', fontWeight: 700, fontSize: 14, marginBottom: 12 }}>
+                        ✅ {count} passport photos on A4 — ready to print &amp; cut
+                    </div>
+                    <img src={resultUrl} alt="sheet" style={{
+                        width: '100%', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)',
+                        marginBottom: 14, background: '#fff',
+                    }} />
+                    <div style={{ display: 'flex', gap: 10 }}>
+                        <a href={resultUrl} download={`passport-${count}-photos-A4.png`} className="btn-secondary"
+                            style={{ textDecoration: 'none', flex: 1 }}>
+                            <Download size={16} /> Download
+                        </a>
+                        <button className="btn-secondary" style={{ flex: 1 }}
+                            onClick={() => { const w = window.open(resultUrl); w.print() }}>
+                            <Printer size={16} /> Print
+                        </button>
+                    </div>
+                </div>
+            )
+            }
+        </div >
+    )
+}
